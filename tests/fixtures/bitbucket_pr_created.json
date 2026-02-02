@@ -1,0 +1,52 @@
+{
+  "pullrequest": {
+    "id": 789,
+    "title": "Add new feature",
+    "state": "OPEN",
+    "author": {
+      "username": "testuser"
+    },
+    "source": {
+      "branch": {
+        "name": "feature-branch"
+      },
+      "commit": {
+        "hash": "abc123def456"
+      },
+      "repository": {
+        "full_name": "testorg/testrepo",
+        "links": {
+          "clone": [
+            {
+              "name": "https",
+              "href": "https://bitbucket.org/testorg/testrepo.git"
+            }
+          ]
+        }
+      }
+    },
+    "destination": {
+      "branch": {
+        "name": "main"
+      },
+      "commit": {
+        "hash": "def456abc123"
+      }
+    }
+  },
+  "repository": {
+    "full_name": "testorg/testrepo",
+    "owner": {
+      "username": "testorg"
+    },
+    "name": "testrepo",
+    "links": {
+      "clone": [
+        {
+          "name": "https",
+          "href": "https://bitbucket.org/testorg/testrepo.git"
+        }
+      ]
+    }
+  }
+}

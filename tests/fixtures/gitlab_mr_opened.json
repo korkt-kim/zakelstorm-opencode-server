@@ -1,0 +1,23 @@
+{
+  "object_kind": "merge_request",
+  "event_type": "merge_request",
+  "user": {
+    "username": "testuser"
+  },
+  "project": {
+    "git_http_url": "https://gitlab.com/testorg/testrepo.git",
+    "path_with_namespace": "testorg/testrepo",
+    "namespace": "testorg",
+    "name": "testrepo"
+  },
+  "object_attributes": {
+    "iid": 456,
+    "state": "opened",
+    "title": "Add new feature",
+    "source_branch": "feature-branch",
+    "target_branch": "main",
+    "last_commit": {
+      "id": "abc123def456"
+    }
+  }
+}

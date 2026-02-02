@@ -1,0 +1,33 @@
+{
+  "action": "opened",
+  "number": 123,
+  "pull_request": {
+    "id": 1,
+    "number": 123,
+    "state": "open",
+    "title": "Add new feature",
+    "user": {
+      "login": "testuser"
+    },
+    "head": {
+      "ref": "feature-branch",
+      "sha": "abc123def456",
+      "repo": {
+        "clone_url": "https://github.com/testorg/testrepo.git",
+        "full_name": "testorg/testrepo"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "sha": "def456abc123"
+    }
+  },
+  "repository": {
+    "full_name": "testorg/testrepo",
+    "clone_url": "https://github.com/testorg/testrepo.git",
+    "owner": {
+      "login": "testorg"
+    },
+    "name": "testrepo"
+  }
+}
