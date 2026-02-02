@@ -1,14 +1,38 @@
-FROM node:24-slim
+FROM node:24-slim AS base
 
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y git curl && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g opencode-ai
+WORKDIR /app
 
-COPY .opencode .opencode
+COPY package*.json ./
 
-EXPOSE 3001
+FROM base AS development
 
-CMD ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "3001"]
+RUN npm install
+
+COPY tsconfig.json ./
+COPY src ./src
+
+EXPOSE 8080
+
+CMD ["npm", "run", "dev"]
+
+FROM base AS production
+
+RUN npm ci
+
+COPY tsconfig.json ./
+COPY src ./src
+
+RUN npm run build
+
+RUN npm prune --production
+
+ENV PORT=8080
+ENV NODE_ENV=production
+
+EXPOSE 8080
+
+CMD ["node", "dist/server.js"]
