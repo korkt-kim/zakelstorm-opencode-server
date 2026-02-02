@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  opencode-server:
+    image: ghcr.io/opencode-ai/opencode:latest
+    container_name: opencode-server
+    ports:
+      - "4096:4096"
+    environment:
+      - PORT=4096
+      - OPENCODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4096/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - code-review-network
+
+  webhook-server:
+    build:
+      context: .
+      target: production
+    container_name: webhook-server
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - PORT=8080
+      - NODE_ENV=production
+      - OPENCODE_API_URL=http://opencode-server:4096
+    restart: unless-stopped
+    volumes:
+      - /tmp/code-review:/tmp/code-review
+    depends_on:
+      opencode-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - code-review-network
+
+networks:
+  code-review-network:
+    driver: bridge
