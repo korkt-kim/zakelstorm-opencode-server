@@ -42,8 +42,6 @@ coverage/
 .opencode/configs/auth.json
 .opencode/configs/opencode.json
 
-# OpenCode cache (node_modules and dependencies)
+# OpenCode cache (actual files ignored, keep examples only)
 .opencode/cache/*
 !.opencode/cache/*.example
-!.opencode/cache/package.json
-!.opencode/cache/package-lock.json
