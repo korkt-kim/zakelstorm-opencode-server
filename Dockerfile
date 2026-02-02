@@ -1,4 +1,4 @@
-FROM node:24-slim AS base
+FROM node:24-slim 
 
 RUN apt-get update && \
     apt-get install -y git curl && \
@@ -7,19 +7,6 @@ RUN apt-get update && \
 WORKDIR /app
 
 COPY package*.json ./
-
-FROM base AS development
-
-RUN npm install
-
-COPY tsconfig.json ./
-COPY src ./src
-
-EXPOSE 8080
-
-CMD ["npm", "run", "dev"]
-
-FROM base AS production
 
 RUN npm ci
 
