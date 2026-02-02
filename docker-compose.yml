@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   opencode-server:
-    image: ghcr.io/anomalyco/opencode:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.opencode
+    image: webhook-opencode-server:latest
     container_name: opencode-server
     ports:
       - "4096:4096"
