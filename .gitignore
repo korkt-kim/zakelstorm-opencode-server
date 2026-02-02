@@ -41,3 +41,9 @@ coverage/
 # OpenCode configuration files (contain sensitive API keys)
 .opencode/configs/auth.json
 .opencode/configs/opencode.json
+
+# OpenCode cache (node_modules and dependencies)
+.opencode/cache/*
+!.opencode/cache/*.example
+!.opencode/cache/package.json
+!.opencode/cache/package-lock.json
