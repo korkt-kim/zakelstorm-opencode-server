@@ -5,6 +5,8 @@ import { parseBitbucketWebhook } from '../webhooks/bitbucket.js';
 import { GitService } from '../services/git.js';
 import { OpenCodeService } from '../services/opencode.js';
 import { PlatformService } from '../services/platforms/index.js';
+import { verifyGitHubSignature, verifyGitLabToken, verifyBitbucketSignature } from '../utils/webhook-verification.js';
+import { GITHUB_WEBHOOK_SECRET, GITLAB_WEBHOOK_SECRET, BITBUCKET_WEBHOOK_SECRET } from '../config.js';
 
 type Provider = 'github' | 'gitlab' | 'bitbucket';
 
@@ -32,7 +34,33 @@ export async function handleCodeReview(req: Request, res: Response): Promise<voi
       return;
     }
 
-    const webhookData = parseWebhookPayload(req.body, provider);
+    const rawBody = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+
+    if (provider === 'github') {
+      const signature = req.headers['x-hub-signature-256'] as string | undefined;
+      if (!verifyGitHubSignature(rawBody, signature, GITHUB_WEBHOOK_SECRET)) {
+        console.error('[GitHub] Webhook signature verification failed');
+        res.status(401).json({ error: 'Invalid signature' });
+        return;
+      }
+    } else if (provider === 'gitlab') {
+      const token = req.headers['x-gitlab-token'] as string | undefined;
+      if (!verifyGitLabToken(token, GITLAB_WEBHOOK_SECRET)) {
+        console.error('[GitLab] Webhook token verification failed');
+        res.status(401).json({ error: 'Invalid token' });
+        return;
+      }
+    } else if (provider === 'bitbucket') {
+      const signature = req.headers['x-hub-signature'] as string | undefined;
+      if (!verifyBitbucketSignature(rawBody, signature, BITBUCKET_WEBHOOK_SECRET)) {
+        console.error('[Bitbucket] Webhook signature verification failed');
+        res.status(401).json({ error: 'Invalid signature' });
+        return;
+      }
+    }
+
+    const webhookData = parseWebhookPayload(payload, provider);
     const prNumber = webhookData.pr || webhookData.mr || 0;
 
     res.status(202).json({
