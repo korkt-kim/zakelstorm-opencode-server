@@ -79,10 +79,46 @@ GITHUB_TOKEN=ghp_your_github_personal_access_token
 GITLAB_TOKEN=glpat_your_gitlab_access_token
 BITBUCKET_TOKEN=your_bitbucket_app_password
 
+# Webhook Secrets (for signature verification)
+GITHUB_WEBHOOK_SECRET=your_github_webhook_secret
+GITLAB_WEBHOOK_SECRET=your_gitlab_webhook_secret
+BITBUCKET_WEBHOOK_SECRET=your_bitbucket_webhook_secret
+
 # OpenCode AI Configuration
 OPENCODE_API_KEY=your_opencode_api_key_here
 OPENCODE_API_URL=http://localhost:4096  # Optional
+
+# OpenCode Model Configuration
+MODEL_PROVIDER=opencode
+MODEL=big-pickle
 ```
+
+### OpenCode Configuration
+
+OpenCode settings are managed in the `.opencode/` directory:
+
+- **`.opencode/configs/`** - OpenCode configuration files (providers, models, plugins)
+- **`.opencode/cache/`** - npm dependencies for custom providers
+- **`.opencode/skills/`** - Custom global skills
+
+**Quick Setup:**
+```bash
+# 1. Copy example files
+cp .opencode/configs/opencode.json.example .opencode/configs/opencode.json
+cp .opencode/configs/auth.json.example .opencode/configs/auth.json
+cp .opencode/cache/package.json.example .opencode/cache/package.json
+
+# 2. Edit config files with your API keys
+vim .opencode/configs/auth.json
+
+# 3. Install cache dependencies (on host, not in container)
+cd .opencode/cache && npm install && cd ../..
+
+# 4. Start with Docker
+docker-compose up -d
+```
+
+For detailed configuration guide, see [.opencode/README.md](.opencode/README.md)
 
 ## API Endpoints
 
@@ -196,9 +232,22 @@ src/
 │       ├── gitlab.ts           # GitLab API client
 │       ├── bitbucket.ts        # BitBucket API client
 │       └── index.ts            # Platform service aggregator
+├── utils/
+│   └── webhook-verification.ts # Webhook signature verification
 tests/
 ├── fixtures/                   # Test webhook payloads
 └── *.test.ts                  # Test suites
+.opencode/
+├── configs/                    # OpenCode configuration files
+│   ├── opencode.json          # Providers, models, plugins (gitignored)
+│   ├── auth.json              # API keys, OAuth tokens (gitignored)
+│   └── *.example              # Configuration templates
+├── cache/                      # npm dependencies for providers
+│   ├── package.json           # Provider dependencies (gitignored)
+│   └── node_modules/          # Installed packages (gitignored)
+├── skills/                     # Custom global skills
+│   └── code-review/           # Code review skill
+└── README.md                   # Detailed OpenCode setup guide
 ```
 
 ### NPM Scripts
