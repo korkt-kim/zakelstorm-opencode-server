@@ -2,27 +2,32 @@ version: '3.8'
 
 services:
   opencode-server:
-    image: ghcr.io/opencode-ai/opencode:latest
+    image: ghcr.io/anomalyco/opencode:latest
     container_name: opencode-server
     ports:
       - "4096:4096"
     environment:
       - PORT=4096
       - OPENCODE_ENV=production
+    entrypoint: ["/root/.opencode/entrypoint.sh"]
+    command: ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "4096"]
+    volumes:
+      - ./.opencode/configs/opencode.json:/root/.config/opencode/opencode.json
+      - ./.opencode/configs/auth.json:/root/.local/share/opencode/auth.json
+      - ./.opencode/cache:/root/.cache/opencode
+      - ./.opencode/entrypoint.sh:/root/.opencode/entrypoint.sh:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4096/health"]
-      interval: 30s
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:4096 || exit 1"]
+      interval: 15s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 30s
     networks:
       - code-review-network
 
   webhook-server:
-    build:
-      context: .
-      target: production
+    build: .
     container_name: webhook-server
     ports:
       - "8080:8080"
@@ -37,7 +42,7 @@ services:
       - /tmp/code-review:/tmp/code-review
     depends_on:
       opencode-server:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s

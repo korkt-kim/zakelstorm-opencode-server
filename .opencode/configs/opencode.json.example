@@ -1,0 +1,69 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "system",
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+    }
+  },
+  "plugin": [
+    "oh-my-opencode@latest"
+  ],
+  "provider": {
+    "h-chat-anthropic": {
+      "npm": "@fdi/h-chat-anthropic",
+      "name": "H-Chat Anthropic Claude",
+      "options": {
+        "apiKey": "your_api_key_here",
+        "baseURL": "https://h-chat-api.autoever.com"
+      },
+      "models": {
+        "claude-sonnet-4-5": {
+          "name": "Claude Sonnet 4.5 (H-Chat)",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image", "pdf"],
+            "output": ["text"]
+          }
+        }
+      }
+    },
+    "h-chat-google": {
+      "npm": "@fdi/h-chat-google",
+      "name": "H-Chat Google Gemini",
+      "options": {
+        "apiKey": "your_api_key_here",
+        "baseURL": "https://h-chat-api.autoever.com"
+      },
+      "models": {
+        "gemini-2.5-flash": {
+          "name": "Gemini 2.5 Flash (H-Chat)",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image", "audio", "video", "pdf"],
+            "output": ["text"]
+          }
+        }
+      }
+    },
+    "h-chat-openai": {
+      "npm": "@fdi/h-chat-openai",
+      "name": "H-Chat OpenAI GPT",
+      "options": {
+        "apiKey": "your_api_key_here",
+        "baseURL": "https://h-chat-api.autoever.com"
+      },
+      "models": {
+        "gpt-5.2": {
+          "name": "GPT-5.2 (H-Chat)",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        }
+      }
+    }
+  }
+}

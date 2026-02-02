@@ -80,7 +80,7 @@ git diff origin/main...HEAD -- <filepath>
 
 ## Output Format
 
-만약 clone된 프로젝트내 코드리뷰 관련 스킬에 Output Format이 없다면 다음 형식으로 제공하고 만약 clone된 프로젝트내 코드리뷰 관련 스킬에 Output Format이 있다면 clone된 프로젝트내 해당 코드리뷰 관련 스킬의 Output Format을 사용합니다.
+프로젝트의 code-review 스킬에 Output Format이 정의되어 있으면 해당 형식을 따르고, 없으면 아래 기본 형식을 사용합니다:
 
 ```markdown
 ## PR Review Summary
