@@ -1,0 +1,33 @@
+{
+  "name": "webhook-code-review-server",
+  "version": "1.0.0",
+  "description": "Webhook-based code review server for GitHub, GitLab, and BitBucket",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "vitest"
+  },
+  "keywords": ["webhook", "code-review", "github", "gitlab", "bitbucket"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@opencode-ai/sdk": "^1.1.48",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "simple-git": "^3.27.0",
+    "zod": "^3.24.1",
+    "@octokit/rest": "^21.0.2",
+    "@gitbeaker/rest": "^40.3.1",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
