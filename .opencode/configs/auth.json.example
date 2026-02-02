@@ -1,0 +1,20 @@
+{
+  "h-chat-openai": {
+    "type": "api",
+    "key": "your_h_chat_openai_api_key_here"
+  },
+  "h-chat-google": {
+    "type": "api",
+    "key": "your_h_chat_google_api_key_here"
+  },
+  "h-chat-anthropic": {
+    "type": "api",
+    "key": "your_h_chat_anthropic_api_key_here"
+  },
+  "google": {
+    "type": "oauth",
+    "refresh": "your_google_refresh_token|project_name",
+    "access": "your_google_access_token",
+    "expires": 0
+  }
+}

@@ -37,3 +37,7 @@ coverage/
 
 # Vitest
 .vitest/
+
+# OpenCode configuration files (contain sensitive API keys)
+.opencode/configs/auth.json
+.opencode/configs/opencode.json

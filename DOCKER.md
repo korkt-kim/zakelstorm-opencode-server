@@ -75,8 +75,8 @@ lsof -i :8080
 
 ```bash
 # 특정 서비스 로그
-docker-compose logs -f webhook-server
-docker-compose logs -f opencode-server
+docker-compose logs webhook-server
+docker-compose logs opencode-server
 ```
 
 ## 📝 환경 변수
@@ -97,5 +97,5 @@ MODEL_PROVIDER=opencode
 MODEL=big-pickle
 
 # OpenCode는 자동으로 설정됩니다 (Docker Compose 사용 시)
-# OPENCODE_API_URL=http://opencode-server:4096
+# OPENCODE_API_URL=http://localhost:4096
 ```
