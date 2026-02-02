@@ -12,6 +12,7 @@ interface WebhookData {
   provider: Provider;
   repo: string;
   cloneUrl: string;
+  host: string;
   pr?: number;
   mr?: number;
   headBranch: string;
@@ -90,6 +91,7 @@ async function processCodeReviewAsync(data: WebhookData): Promise<void> {
 
     await platformService.postReviewComment({
       platform: data.provider,
+      host: data.host,
       owner: data.owner,
       repo: data.repoName,
       prNumber,

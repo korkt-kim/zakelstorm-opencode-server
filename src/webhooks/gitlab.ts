@@ -24,6 +24,7 @@ export interface ParsedWebhookData {
   provider: 'gitlab';
   repo: string;
   cloneUrl: string;
+  host: string;
   mr: number;
   headBranch: string;
   headSha: string;
@@ -35,10 +36,15 @@ export interface ParsedWebhookData {
 export function parseGitlabWebhook(payload: unknown): ParsedWebhookData {
   const validated = gitlabWebhookSchema.parse(payload);
 
+  const cloneUrl = validated.project.git_http_url;
+  const url = new URL(cloneUrl);
+  const host = url.origin;
+
   return {
     provider: 'gitlab',
     repo: validated.project.path_with_namespace,
-    cloneUrl: validated.project.git_http_url,
+    cloneUrl,
+    host,
     mr: validated.object_attributes.iid,
     headBranch: validated.object_attributes.source_branch,
     headSha: validated.object_attributes.last_commit.id,

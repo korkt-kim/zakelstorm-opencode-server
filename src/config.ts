@@ -10,13 +10,12 @@ const envSchema = z.object({
   GITHUB_TOKEN: z.string().optional(),
   GITLAB_TOKEN: z.string().optional(),
   BITBUCKET_TOKEN: z.string().optional(),
-
-  GITLAB_HOST: z.string().optional(),
-  GITHUB_HOST: z.string().optional(),
-  BITBUCKET_HOST: z.string().optional(),
   
   OPENCODE_API_KEY: z.string().optional(),
   OPENCODE_API_URL: z.string().url().optional(),
+
+  MODEL_PROVIDER: z.string(),
+  MODEL: z.string(),
 });
 
 export type Config = z.infer<typeof envSchema>;
@@ -28,10 +27,9 @@ export const {
   NODE_ENV,
   GITHUB_TOKEN,
   GITLAB_TOKEN,
-  GITLAB_HOST,
-  GITHUB_HOST,
-  BITBUCKET_HOST,
   BITBUCKET_TOKEN,
   OPENCODE_API_KEY,
   OPENCODE_API_URL,
+  MODEL_PROVIDER,
+  MODEL
 } = config;

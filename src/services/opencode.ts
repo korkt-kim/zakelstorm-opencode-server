@@ -1,5 +1,5 @@
 import { createOpencodeClient, OpencodeClient } from '@opencode-ai/sdk';
-import { OPENCODE_API_URL } from '../config.js';
+import { OPENCODE_API_URL,MODEL,MODEL_PROVIDER } from '../config.js';
 
 export interface CodeReviewRequest {
   diff: string;
@@ -51,8 +51,8 @@ export class OpenCodeService {
       path: { id: sessionId },
       body: {
         model: {
-          providerID: 'h-chat-anthropic',
-          modelID: 'claude-sonnet-4-5'
+          providerID: MODEL_PROVIDER,
+          modelID: MODEL
         },
         parts: [{
           type: 'text',

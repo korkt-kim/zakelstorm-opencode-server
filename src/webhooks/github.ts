@@ -34,6 +34,7 @@ export interface ParsedWebhookData {
   provider: 'github';
   repo: string;
   cloneUrl: string;
+  host: string;
   pr: number;
   headBranch: string;
   headSha: string;
@@ -46,10 +47,15 @@ export interface ParsedWebhookData {
 export function parseGithubWebhook(payload: unknown): ParsedWebhookData {
   const validated = githubWebhookSchema.parse(payload);
 
+  const cloneUrl = validated.repository.clone_url;
+  const url = new URL(cloneUrl);
+  const host = url.origin;
+
   return {
     provider: 'github',
     repo: validated.repository.full_name,
-    cloneUrl: validated.repository.clone_url,
+    cloneUrl,
+    host,
     pr: validated.pull_request.number,
     headBranch: validated.pull_request.head.ref,
     headSha: validated.pull_request.head.sha,
