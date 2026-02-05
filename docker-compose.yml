@@ -12,13 +12,11 @@ services:
     environment:
       - PORT=4096
       - OPENCODE_ENV=production
-    entrypoint: ["/root/.opencode/entrypoint.sh"]
     command: ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "4096"]
     volumes:
       - ./.opencode/configs/opencode.json:/root/.config/opencode/opencode.json
       - ./.opencode/configs/auth.json:/root/.local/share/opencode/auth.json
       - ./.opencode/cache:/root/.cache/opencode
-      - ./.opencode/entrypoint.sh:/root/.opencode/entrypoint.sh:ro
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:4096 || exit 1"]
@@ -30,7 +28,10 @@ services:
       - code-review-network
 
   webhook-server:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile.webserver
+    image: webhook-web-server:latest
     container_name: webhook-server
     ports:
       - "8080:8080"
