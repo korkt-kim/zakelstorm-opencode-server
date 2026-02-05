@@ -13,5 +13,4 @@ ENV OPENCODE_ENV=production
 
 EXPOSE 4096
 
-ENTRYPOINT ["/root/.opencode/entrypoint.sh"]
 CMD ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "4096"]

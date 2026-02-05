@@ -36,9 +36,13 @@ export async function handleCodeReview(req: Request, res: Response): Promise<voi
 
     const rawBody = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
     const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-
     if (provider === 'github') {
       const signature = req.headers['x-hub-signature-256'] as string | undefined;
+      const { action } = req.body
+      if(!(action==='opened' || action==='synchronize')) {
+        res.status(202).json({ error: 'Invalid action' });
+        return;
+      }
       if (!verifyGitHubSignature(rawBody, signature, GITHUB_WEBHOOK_SECRET)) {
         console.error('[GitHub] Webhook signature verification failed');
         res.status(401).json({ error: 'Invalid signature' });

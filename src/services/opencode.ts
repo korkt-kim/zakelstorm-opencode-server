@@ -47,16 +47,18 @@ export class OpenCodeService {
     const sessionId = createRes.data.id;
     console.log('[OpenCodeService] Created session:', sessionId);
 
-    const promptRes = await this.openCodeClient.session.prompt({
-      path: { id: sessionId },
-      body: {
-        model: {
-          providerID: MODEL_PROVIDER,
-          modelID: MODEL
-        },
-        parts: [{
-          type: 'text',
-          text: `/code-review
+
+    try {
+      const promptRes = await this.openCodeClient.session.prompt({
+        path: { id: sessionId },
+        body: {
+          model: {
+            providerID: MODEL_PROVIDER,
+            modelID: MODEL
+          },
+          parts: [{
+            type: 'text',
+            text: `/code-review
 
 ## PR Information
 - Repository: ${request.repoName}
@@ -71,31 +73,38 @@ ${request.diff}
 \`\`\`
 
 코드 리뷰를 진행해주세요.`,
-        }]
+          }]
+        }
+      });
+
+      if (!promptRes.data) {
+        throw new Error('No data in prompt response');
       }
-    });
 
+      const data = promptRes.data as any;
 
-    if (!promptRes.data) {
-      throw new Error('No data in prompt response');
-    }
+      if (data.parts && Array.isArray(data.parts) && data.parts.length > 0) {
+        const textParts = data.parts
+          .filter((part: any) => part.type === 'text' && part.text)
+          .map((part: any) => part.text)
+          .join('\n\n');
+        
+        if (textParts) {
+          console.log('[OpenCodeService] Review completed, length:', textParts.length);
+          return textParts;
+        }
+      }
 
-    const data = promptRes.data as any;
-
-    if (data.parts && Array.isArray(data.parts) && data.parts.length > 0) {
-      const textParts = data.parts
-        .filter((part: any) => part.type === 'text' && part.text)
-        .map((part: any) => part.text)
-        .join('\n\n');
-      
-      if (textParts) {
-        console.log('[OpenCodeService] Review completed, length:', textParts.length);
-        return textParts;
+      console.warn('[OpenCodeService] No text parts found, returning raw data');
+      return JSON.stringify(data, null, 2);
+    } finally {
+      try {
+        await this.openCodeClient.session.delete({ path: { id: sessionId } });
+        console.log('[OpenCodeService] Deleted session:', sessionId);
+      } catch (deleteError) {
+        console.warn('[OpenCodeService] Failed to delete session:', sessionId, deleteError);
       }
     }
-
-    console.warn('[OpenCodeService] No text parts found, returning raw data');
-    return JSON.stringify(data, null, 2)
   }
 
   // private parseReviewResult(text: string): CodeReviewResult {

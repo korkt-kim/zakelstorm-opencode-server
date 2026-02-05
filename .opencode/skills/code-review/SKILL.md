@@ -10,7 +10,7 @@ PR(Pull Request)의 코드 변경사항을 체계적으로 리뷰하는 skill입
 ## Activation
 
 이 skill은 다음 상황에서 자동으로 활성화됩니다:
-- `/review` 명령어 실행 시
+- `/code-review` 명령어 실행 시
 - "리뷰해줘", "코드 리뷰", "PR 리뷰" 키워드 감지 시
 
 ## Review Process
@@ -42,58 +42,65 @@ ls .claude/skills/
 **프로젝트에 code-review 스킬이 있다면:**
 - 해당 스킬을 로드: `skill({ name: "<project-skill-name>" })`
 - 프로젝트 스킬의 프로세스를 우선적으로 따름
-- 이후로의 Step은 무시한다.
+- 이후 Step은 무시
+
+> **Tip**: 프로젝트 skill에서 전역 기본 로직을 상속받으려면:
+> ```
+> skill({ name: "code-review-base" })
+> ```
+> 이렇게 호출하면 base skill의 리뷰 로직이 먼저 실행됩니다.
 
 **프로젝트에 스킬이 없다면:**
-- 아래 기본 프로세스 진행
+- 아래 Step 2로 진행
 
-### Step 2: 변경사항 파악
+### Step 2: 기본 리뷰 로직 실행
 
-```bash
-git diff origin/main...HEAD --name-only
-git diff origin/main...HEAD --stat
+프로젝트 skill이 없는 경우, 전역 base skill을 실행합니다:
+
+```
+skill({ name: "code-review-base" })
 ```
 
-변경된 파일 목록과 변경량을 먼저 확인합니다.
+## Skill Hierarchy
 
-### Step 3: 파일별 상세 리뷰
-
-각 변경된 파일에 대해:
-
-```bash
-git diff origin/main...HEAD -- <filepath>
+```
+code-review (진입점/라우터)
+    │
+    ├─→ 프로젝트 skill 있음? → 프로젝트 skill 실행
+    │                              │
+    │                              └─→ (선택) skill({ name: "code-review-base" }) 호출로 상속
+    │
+    └─→ 프로젝트 skill 없음? → skill({ name: "code-review-base" }) 직접 실행
 ```
 
-### Step 4: 리뷰 관점
+## Example: 프로젝트 커스텀 Skill
 
-다음 관점에서 코드를 분석합니다:
-
-1. **버그 가능성**: 런타임 에러, 엣지 케이스, null/undefined 처리
-2. **보안**: 인증/인가, 입력 검증, 민감 정보 노출
-3. **성능**: 불필요한 연산, N+1 쿼리, 메모리 누수
-4. **가독성**: 네이밍, 함수 길이, 복잡도
-5. **테스트**: 테스트 커버리지, 엣지 케이스 테스트
-
-### Step 5: 프로젝트 컨벤션 적용
-
-프로젝트의 AGENTS.md, 기타 설정 파일을 참고하여 컨벤션 준수 여부 확인.
-
-## Output Format
-
-프로젝트의 code-review 스킬에 Output Format이 정의되어 있으면 해당 형식을 따르고, 없으면 아래 기본 형식을 사용합니다:
+프로젝트에서 `.opencode/skills/code-review/SKILL.md`를 만들어 커스터마이징:
 
 ```markdown
-## PR Review Summary
+---
+name: code-review
+description: 우리 팀 코드 리뷰 규칙
+---
 
-### Critical Issues (must fix)
-- [ ] 파일명:라인 - 이슈 설명
+# Our Team Code Review
 
-### Suggestions (should consider)
-- [ ] 파일명:라인 - 제안 내용
+## Step 1: 전역 기본 리뷰 실행
+skill({ name: "code-review-base" })
 
-### Minor (nice to have)
-- [ ] 파일명:라인 - 개선 아이디어
+## Step 2: 팀 특화 규칙 적용
+위 기본 리뷰에 추가로 다음을 검토:
 
-### Good Points
-- 잘 작성된 부분에 대한 피드백
+### 네이밍 규칙
+- 컴포넌트: PascalCase
+- 함수/변수: camelCase
+- 상수: UPPER_SNAKE_CASE
+
+### 금지 패턴
+- `any` 타입 사용 금지
+- `console.log` 커밋 금지
+- 매직 넘버 사용 금지
+
+## Output Format
+(프로젝트 특화 포맷 정의)
 ```
