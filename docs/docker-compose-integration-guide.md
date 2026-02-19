@@ -208,8 +208,6 @@ services:
       - NODE_ENV=production
       - OPENCODE_API_URL=http://opencode-server:3001
     restart: unless-stopped
-    volumes:
-      - /tmp/code-review:/tmp/code-review
     depends_on:
       opencode-server:
         condition: service_healthy
