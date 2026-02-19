@@ -119,6 +119,7 @@ async function processCodeReviewAsync(data: WebhookData): Promise<void> {
       baseBranch: data.baseBranch,
       headBranch: data.headBranch,
       pr: prNumber,
+      repoUrl: data.cloneUrl,
     });
 
     await platformService.postReviewComment({
