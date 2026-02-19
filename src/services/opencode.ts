@@ -8,6 +8,7 @@ export interface CodeReviewRequest {
   baseBranch: string;
   headBranch: string;
   pr: number;
+  repoUrl: string;
 }
 
 export type CodeReviewResult = string
@@ -62,10 +63,11 @@ export class OpenCodeService {
 
 ## PR Information
 - Repository: ${request.repoName}
-- PR Number: #${request.pr}
-- Base Branch: ${request.baseBranch}
-- Head Branch: ${request.headBranch}
-- Files Changed: ${request.filesChanged.join(', ')}
+- PRNumber: #${request.pr}
+- BaseBranch: ${request.baseBranch}
+- RepositoryURL: ${request.repoUrl}
+- HeadBranch: ${request.headBranch}
+- FilesChanged: ${request.filesChanged.join(', ')}
 
 ## Diff
 \`\`\`diff

@@ -16,7 +16,7 @@ services:
     volumes:
       - ./.opencode/configs/opencode.json:/root/.config/opencode/opencode.json
       - ./.opencode/configs/auth.json:/root/.local/share/opencode/auth.json
-      - ./.opencode/cache:/root/.cache/opencode
+      - ./.opencode/skills:/root/.config/opencode/skills
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:4096 || exit 1"]

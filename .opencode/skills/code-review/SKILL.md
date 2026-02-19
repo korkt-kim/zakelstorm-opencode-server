@@ -20,27 +20,27 @@ PR(Pull Request)의 코드 변경사항을 체계적으로 리뷰하는 skill입
 프롬프트에서 레포지토리 정보를 추출하여 clone합니다:
 
 ```bash
-git clone --branch <branch> <repo_url> /workspace
-cd /workspace
-git fetch origin main
+git clone --branch <HeadBranch> <RepositoryURL> "<current ISO 8601>_<PRNumber>_<RepoName>"
+cd "<current ISO 8601>_<PRNumber>_<RepoName>"
+git fetch origin <BaseBranch>
 ```
 
 필요한 정보:
-- `repo_url`: 리뷰할 레포지토리 URL
-- `branch`: 리뷰할 브랜치 (PR 소스 브랜치)
-- `base_branch`: 비교 대상 브랜치 (기본값: main)
+- `RepositoryURL`: 리뷰할 레포지토리 URL
+- `HeadBranch`: 리뷰할 브랜치 (PR 소스 브랜치)
+- `BaseBranch`: 비교 대상 브랜치 (기본값: main)
 
-### Step 1: 프로젝트 스킬 확인 (우선 적용)
+### Step 1: 프로젝트 스킬 확인
 
-clone된 프로젝트에 코드리뷰 관련 스킬이 있는지 확인합니다:
+clone된 프로젝트에 코드리뷰 관련 **가장 연관된 스킬**이 있는지 확인합니다:
 
 ```bash
-ls .opencode/skills/
-ls .claude/skills/
+ls "<cloned-repository-name>"/.opencode/skills/
+ls "<cloned-repository-name>"/.claude/skills/
 ```
 
-**프로젝트에 code-review 스킬이 있다면:**
-- 해당 스킬을 로드: `skill({ name: "<project-skill-name>" })`
+**프로젝트에 연관된 코드리뷰 스킬이 있다면:**
+- 해당 스킬을 로드: `skill({ name: "<찾은-스킬-이름>" })`
 - 프로젝트 스킬의 프로세스를 우선적으로 따름
 - 이후 Step은 무시
 
