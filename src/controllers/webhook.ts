@@ -136,6 +136,7 @@ async function processCodeReviewAsync(data: WebhookData): Promise<void> {
   } catch (error) {
     console.error(`[CodeReview] ❌ Review failed for ${data.repo} PR/MR #${prNumber}:`, error);
   } finally {
+    console.log(`[CodeReview] Cleaning up for ${data.repo} PR/MR #${prNumber}`);
     if (repoPath) {
       await gitService.cleanup(repoPath);
     }
